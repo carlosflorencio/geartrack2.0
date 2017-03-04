@@ -19,7 +19,8 @@ namespace GeartrackApi.Providers
         /// Scraps the provider website and parses the information
         /// Throws Exception if something odd occurs
         /// </summary>
-        /// <returns>A View Model</returns>
-        object GetInformationAndParse();
+        /// <param name="id"></param>
+        /// <returns>A view model</returns>
+        Task<object> GetInformationAndParse(string id);
     }
 }

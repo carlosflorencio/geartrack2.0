@@ -42,10 +42,10 @@ namespace GeartrackApi
             if (_env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                loggerFactory.AddDebug();
             }
 
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
 
             app.UseMvc();
         }

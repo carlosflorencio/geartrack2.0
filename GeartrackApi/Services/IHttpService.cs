@@ -8,6 +8,6 @@ namespace GeartrackApi.Services
 {
     public interface IHttpService
     {
-        Task<String> Get(string uri);
+        Task<String> GetAsync(string uri);
     }
 }

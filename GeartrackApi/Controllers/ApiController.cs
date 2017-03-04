@@ -24,17 +24,34 @@ namespace GeartrackApi.Controllers
         }
 
         // GET api/{provider}/{id}
+        // Searches for a provider and executes it
         [HttpGet("{providerName}/{id}")]
-        public async Task<IActionResult> GetAsync(string providerName, string id)
+        public async Task<IActionResult> ParseProvider(string providerName, string id)
         {
             try
             {
                 var provider = _providers.Get(providerName);
 
-                provider.ValidateId(id);
-                await Task.FromResult(1);
+                var parsedId = id.ToUpper().Trim();
+                provider.ValidateId(parsedId);
 
-                return Ok(1);
+                var result = await provider.GetInformationAndParse(parsedId);
+
+                return Ok(result);
+            }
+            catch(ProviderException) // Failed to parse of provider is offline
+            {
+                _logger.LogCritical("Provider is offline or changed is website: {0} {1}",
+                    providerName, id);
+
+                HttpContext.Response.StatusCode = 500;
+                return Json(new ErrorResponse("Something is wrong with the provider."));
+            }
+            catch (InformationNotAvaiableException)
+            {
+                _logger.LogWarning("No information for this id was found: {0} {1}"
+                    ,providerName, id);
+                return NotFound(new ErrorResponse("No data was found for that id."));
             }
             catch (ProviderNotFoundException)
             {

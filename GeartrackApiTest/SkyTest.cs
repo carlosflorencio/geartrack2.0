@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using GeartrackApi.Controllers;
+using GeartrackApi;
 
 namespace GeartrackApiTest
 {
@@ -15,11 +16,14 @@ namespace GeartrackApiTest
         [TestMethod]
         public async Task PriorityLineTest()
         {
-            var logger = new Mock<ILogger<HttpService>>().Object;
-            var service = new HttpService(logger);
-            var controller = new ApiController(service);
+            var loggerApi = new Mock<ILogger<ApiController>>().Object;
+            var loggerHttp = new Mock<ILogger<HttpService>>().Object;
+            var httpService = new HttpService(loggerHttp);
+            var providers = new GeartrackProviders(httpService);
 
-            var test = await controller.GetAsync("PQ4F6P0704104480181750Q");
+            var controller = new ApiController(providers, loggerApi);
+
+            var test = await controller.ParseProvider("sky", "PQ4F6P0704104480181750Q");
 
             // TODO: Change this test to pass
             Assert.AreEqual("teste", test);

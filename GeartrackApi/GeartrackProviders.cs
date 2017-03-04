@@ -1,5 +1,6 @@
 ﻿using GeartrackApi.Exceptions;
 using GeartrackApi.Providers;
+using GeartrackApi.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,23 +11,23 @@ namespace GeartrackApi
 {
     public class GeartrackProviders
     {
-        private Dictionary<string, IProvider> _map;
+        private Dictionary<string, Lazy<IProvider>> _map;
 
-        public GeartrackProviders()
+        public GeartrackProviders(IHttpService httpService)
         {
             // Scrappers
-            _map = new Dictionary<string, IProvider>
+            _map = new Dictionary<string, Lazy<IProvider>>
             {
-                { "sky", new SkyProvider() }
+                { "sky", new Lazy<IProvider>(() => new SkyProvider(httpService)) }
             };
         }
 
         public IProvider Get(string provider)
         {
-            IProvider result;
+            Lazy<IProvider> result;
             if (_map.TryGetValue(provider, out result))
             {
-                return result;
+                return result.Value;
             }
             else
             {
