@@ -17,7 +17,7 @@ namespace GeartrackApiTest
         {
             var logger = new Mock<ILogger<HttpService>>().Object;
             var service = new HttpService(logger);
-            var controller = new SkyController(service);
+            var controller = new ApiController(service);
 
             var test = await controller.GetAsync("PQ4F6P0704104480181750Q");
 

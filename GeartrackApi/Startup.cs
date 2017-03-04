@@ -32,7 +32,8 @@ namespace GeartrackApi
             services.AddMvc();
 
             // Custom Services
-            services.AddScoped<IHttpService, HttpService>();
+            services.AddSingleton<IHttpService, HttpService>();
+            services.AddSingleton<GeartrackProviders>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
