@@ -22,7 +22,7 @@ namespace GeartrackApi.Controllers
         [HttpGet("{id}")]
         public async Task<string> GetAsync(string id)
         {
-            var uri = string.Format(url, "PQ4F6P0704104480181750Q");
+            var uri = string.Format(url, id);
 
             var content = await _http.Get(uri);
 
