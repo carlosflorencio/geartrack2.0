@@ -1,5 +1,8 @@
 ﻿using GeartrackApi.Exceptions;
+using GeartrackApi.Providers.Sky.Common;
+using GeartrackApi.Providers.Sky.PriorityLine;
 using GeartrackApi.Services;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +23,11 @@ namespace GeartrackApi.Providers
             Console.WriteLine(http.ToString());
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Validate
+        |--------------------------------------------------------------------------
+        */
         public bool ValidateId(string id)
         {
             if (id.StartsWith("PQ")) return true;
@@ -30,18 +38,28 @@ namespace GeartrackApi.Providers
             throw new InvalidIdException();
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Parse
+        |--------------------------------------------------------------------------
+        */
         public async Task<object> GetInformationAndParse(string id)
         {
             var content = await _http.GetAsync(string.Format(url, id));
 
-            if(content.Contains("No result found for your query."))
+            switch (id[0])
             {
-                throw new InformationNotAvaiableException();
+                case 'N': // Netherlands Post surface mail
+                case 'L': // Bpost is the same
+                case 'S': // Malasya Pos
+                    var dto2 = JsonConvert.DeserializeObject<SkyCommonPosDTO>(content);
+
+                    return null;
+                default: // Priority Line
+                    var dto = JsonConvert.DeserializeObject<SkyPriorityLineDTO>(content);
+                    return new SkyPriorityLineModel(dto);
             }
-
-            return content;
         }
-
-
     }
+
 }

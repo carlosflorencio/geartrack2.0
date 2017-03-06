@@ -38,7 +38,7 @@ namespace GeartrackApiTest
 
             try
             {
-                var response = await httpService.GetAsync("https://httpbin.org/delay/10");
+                var response = await httpService.GetAsync("http://request.dev/?code=500&delay=10");
             }
             catch (Exception e)
             {

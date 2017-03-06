@@ -24,9 +24,9 @@ namespace GeartrackApi.Services
             _logger = logger;
 
             // Adds logging to external requests
-            var handler = new RetryHandler(new MeasurementHandler(_logger), 3);
+            var handler = new RetryHandler(new MeasurementHandler(_logger), 2);
             _httpClient = new HttpClient(handler);
-            //_httpClient.Timeout = TimeSpan.FromSeconds(5);
+            //_httpClient.Timeout = TimeSpan.FromSeconds(35);
         }
 
         public async Task<string> GetAsync(string uri)
